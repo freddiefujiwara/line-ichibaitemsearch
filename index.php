@@ -12,7 +12,7 @@ $app->post('/', function (Request $request, Response $response) {
 
     foreach ($body['result'] as $msg) {
         $resContent = $msg['content'];
-        $cli = new RakutenRws_cli();
+        $cli = new RakutenRws_Client();
         $cli->setApplicationId('1030243823320196712');
         $cli->setAffiliateId('0ca3304d.a811038d.0ca3304e.80024f1e');
         $res = $cli->execute('IchibaItemSearch', array(
