@@ -8,7 +8,7 @@ $app = new \Slim\App;
 $app->post('/', function (Request $request, Response $response) {
     $client = new GuzzleHttp\Client();
 
-    $body = json_decode($request->getContent(), true);
+    $body = json_decode($request->getBody(), true);
 
     foreach ($body['result'] as $msg) {
         $resContent = $msg['content'];
