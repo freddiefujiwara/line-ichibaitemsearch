@@ -26,7 +26,10 @@ $app->post('/', function (Request $request, Response $response) {
         }
         $resContent['text'] = "";
         foreach ($res['Items'] as $item) {
-            $resContent['text'] = $item['Item']['itemUrl'];
+            $resContent['text'] = "";
+            $resContent['text'] .= $item['Item']['itemName']."\n";
+            $resContent['text'] .= $item['Item']['itemCaption']."\n";
+            $resContent['text'] .= $item['Item']['itemUrl'];
         }
 
         $requestOptions = [
