@@ -16,8 +16,8 @@ $app->post('/', function (Request $request, Response $response) {
         $client->setApplicationId('1030243823320196712');
         $client->setAffiliateId('0ca3304d.a811038d.0ca3304e.80024f1e');
         $res = $client->execute('IchibaItemSearch', array(
-            'keyword' => $msg['content']['text']
-            'hists' => 3,
+            'keyword' => $msg['content']['text'],
+            'hits' => 3,
             'carrier' => 2
         ));
         if ($res->isOk()) {
