@@ -28,7 +28,7 @@ $app->post('/', function (Request $request, Response $response) {
         foreach ($rwsResponse['Items'] as $item) {
             $resContent = $msg['content'];
             $resContent['text'] = "";
-            $resContent['text'] .= $item['Item']['catchcopy']."\n";
+            $resContent['text'] .= $item['Item']['itemName']."\n";
             $resContent['text'] .= $item['Item']['itemUrl'];
 
             $requestOptions = [
