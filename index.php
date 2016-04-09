@@ -42,7 +42,10 @@ $app->post('/', function (Request $request, Response $response) {
     return $response;
 });
 $app->get('/', function (Request $request, Response $response) {
-    $response->getBody()->write(getenv('FIXIE_URL'));
+    $response->getBody()->write(getenv('FIXIE_URL')."\n".
+                getenv('LINE_CHANNEL_ID')."\n".
+                getenv('LINE_CHANNEL_SECRET')."\n".
+                getenv('LINE_CHANNEL_MID'));
     return $response;
 });
 $app->run();
