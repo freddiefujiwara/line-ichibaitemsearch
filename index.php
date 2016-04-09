@@ -13,7 +13,13 @@ $app->post('/', function (Request $request, Response $response) {
     foreach ($body['result'] as $msg) {
         error_log(__FILE__.":".__LINE__.":".print_r($msg,true));
         $resContent = $msg['content'];
-        $resContent['text'] = 'hello';
+        $ichibaItemSearch = "https://app.rakuten.co.jp/services/api/IchibaItem/Search/20140222?".
+            "applicationId=1030243823320196712&".
+            "affiliateId=0ca3304d.a811038d.0ca3304e.80024f1e&".
+            "hits=3&".
+            "carrier=2"."
+            "keyword=".$msg['content']['text'];
+        $resContent['text'] = $ichibaItemSearch;
 
         $requestOptions = [
             'body' => json_encode([
