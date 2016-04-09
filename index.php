@@ -6,39 +6,42 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 $app = new \Slim\App;
 $app->post('/', function (Request $request, Response $response) {
+    // message from LINE server
     $body = json_decode($request->getBody(), true);
 
     foreach ($body['result'] as $msg) {
-        $resContent = $msg['content'];
-        $cli = new RakutenRws_Client();
-        $cli->setApplicationId(getenv('RAKUTEN_WEBSERVICE_APPLICATIN_ID'));
-        $cli->setAffiliateId(getenv('RAKUTEN_WEBSERVICE_AFFILIATE_ID'));
-        $res = $cli->execute('IchibaItemSearch', array(
-            'keyword' => $msg['content']['text'],
-            'hits' => 3,
-            'carrier' => 2
+        //Search by Rakuten Web Service
+        $rwsClient = new RakutenRws_Client();
+        $rwsClient-> setApplicationId(getenv('RAKUTEN_WEBSERVICE_APPLICATIN_ID'));
+        $rwsClient-> setAffiliateId(getenv('RAKUTEN_WEBSERVICE_AFFILIATE_ID'));
+        $rwsResponse = $rwsClient->execute('IchibaItemSearch', array(
+            'keyword' => $msg['content']['text'], // from message text
+            'hits'    => 3,                       // #of Items
+            'carrier' => 2                        // for smart phone
         ));
-        if (!$res->isOk()) {
-            error_log(__FILE__.":".__LINE__.":".$res->getMessage());
+        if (!$rwsResponse->isOk()) {
+            error_log(__FILE__.":".__LINE__.":".$rwsResponse->getMessage());
             continue;
         }
-        foreach ($res['Items'] as $item) {
+
+        //Respond message
+        foreach ($rwsResponse['Items'] as $item) {
+            $resContent = $msg['content'];
             $resContent['text'] = "";
             $resContent['text'] .= $item['Item']['itemName']."\n";
-            $resContent['text'] .= $item['Item']['itemCaption']."\n";
             $resContent['text'] .= $item['Item']['itemUrl'];
 
             $requestOptions = [
                 'body' => json_encode([
-                    'to' => [$msg['content']['from']],
-                    'toChannel' => 1383378250, # Fixed value
-                    'eventType' => '138311608800106203', # Fixed value
-                    'content' => $resContent,
+                    'to'        => [$msg['content']['from']],
+                    'toChannel' => 1383378250,           // Fixed value
+                    'eventType' => '138311608800106203', // Fixed value
+                    'content'   => $resContent,
                 ]),
                 'headers' => [
-                    'Content-Type' => 'application/json; charset=UTF-8',
-                    'X-Line-ChannelID' => getenv('LINE_CHANNEL_ID'),
-                    'X-Line-ChannelSecret' => getenv('LINE_CHANNEL_SECRET'),
+                    'Content-Type'                 => 'application/json; charset=UTF-8',
+                    'X-Line-ChannelID'             => getenv('LINE_CHANNEL_ID'),
+                    'X-Line-ChannelSecret'         => getenv('LINE_CHANNEL_SECRET'),
                     'X-Line-Trusted-User-With-ACL' => getenv('LINE_CHANNEL_MID'),
                 ],
                 'proxy' => [
@@ -55,13 +58,6 @@ $app->post('/', function (Request $request, Response $response) {
         }
     }
 
-    return $response;
-});
-$app->get('/', function (Request $request, Response $response) {
-    $response->getBody()->write(getenv('FIXIE_URL')."\n".
-        getenv('LINE_CHANNEL_ID')."\n".
-        getenv('LINE_CHANNEL_SECRET')."\n".
-        getenv('LINE_CHANNEL_MID'));
     return $response;
 });
 $app->run();
