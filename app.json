@@ -14,6 +14,12 @@
     },
     "LINE_CHANNEL_MID": {
       "description": "LINE Channel MID"
+    },
+    "RAKUTEN_WEBSERVICE_APPLICATIN_ID": {
+      "description": "Rakuten_Web Service Application ID"
+    },
+    "RAKUTEN_WEBSERVICE_AFFILIATE_ID": {
+      "description": "Rakuten_Web Service Affiliate ID"
     }
   }
 }
