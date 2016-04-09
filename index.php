@@ -20,13 +20,14 @@ $app->post('/', function (Request $request, Response $response) {
             'hits' => 3,
             'carrier' => 2
         ));
-        if ($res->isOk()) {
-            error_log(__FILE__.":".__LINE__.":".print_r($res['hits'],true));
-        } else {
+        if (!$res->isOk()) {
             error_log(__FILE__.":".__LINE__.":".$res->getMessage());
             continue;
         }
-        $resContent['text'] = print_r($res['hits'],true);
+        $resContent['text'] = "";
+        foreach ($res['Items'] as $item) {
+            $resContent['text'] .= print_r($item,true);
+        }
 
         $requestOptions = [
             'body' => json_encode([
