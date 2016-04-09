@@ -17,7 +17,7 @@ $app->post('/', function (Request $request, Response $response) {
             "applicationId=1030243823320196712&".
             "affiliateId=0ca3304d.a811038d.0ca3304e.80024f1e&".
             "hits=3&".
-            "carrier=2"."
+            "carrier=2".
             "keyword=".$msg['content']['text'];
         $resContent['text'] = $ichibaItemSearch;
 
