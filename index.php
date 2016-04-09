@@ -41,4 +41,8 @@ $app->post('/', function (Request $request, Response $response) {
 
     return $response;
 });
+$app->get('/', function (Request $request, Response $response) {
+    $response->getBody()->write(getenv('FIXIE_URL'));
+    return $response;
+});
 $app->run();
