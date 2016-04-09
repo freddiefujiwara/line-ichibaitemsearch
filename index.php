@@ -26,7 +26,7 @@ $app->post('/', function (Request $request, Response $response) {
         }
         $resContent['text'] = "";
         foreach ($res['Items'] as $item) {
-            $resContent['text'] .= print_r($item,true);
+            $resContent['text'] = $item['Item']['itemUrl'];
         }
 
         $requestOptions = [
