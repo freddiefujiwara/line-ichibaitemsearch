@@ -12,10 +12,10 @@ $app->post('/', function (Request $request, Response $response) {
 
     foreach ($body['result'] as $msg) {
         $resContent = $msg['content'];
-        $client = new RakutenRws_Client();
-        $client->setApplicationId('1030243823320196712');
-        $client->setAffiliateId('0ca3304d.a811038d.0ca3304e.80024f1e');
-        $res = $client->execute('IchibaItemSearch', array(
+        $cli = new RakutenRws_cli();
+        $cli->setApplicationId('1030243823320196712');
+        $cli->setAffiliateId('0ca3304d.a811038d.0ca3304e.80024f1e');
+        $res = $cli->execute('IchibaItemSearch', array(
             'keyword' => $msg['content']['text'],
             'hits' => 3,
             'carrier' => 2
