@@ -5,7 +5,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 $app = new \Slim\App;
-$app->post('/callback', function (Request $request, Response $response) {
+$app->post('/', function (Request $request, Response $response) {
     $client = new GuzzleHttp\Client();
 
     $body = json_decode($request->getContent(), true);
