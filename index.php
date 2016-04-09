@@ -11,15 +11,22 @@ $app->post('/', function (Request $request, Response $response) {
     $body = json_decode($request->getBody(), true);
 
     foreach ($body['result'] as $msg) {
-        error_log(__FILE__.":".__LINE__.":".print_r($msg,true));
         $resContent = $msg['content'];
-        $ichibaItemSearch = "https://app.rakuten.co.jp/services/api/IchibaItem/Search/20140222?".
-            "applicationId=1030243823320196712&".
-            "affiliateId=0ca3304d.a811038d.0ca3304e.80024f1e&".
-            "hits=3&".
-            "carrier=2".
-            "keyword=".$msg['content']['text'];
-        $resContent['text'] = $ichibaItemSearch;
+        $client = new RakutenRws_Client();
+        $client->setApplicationId('1030243823320196712');
+        $client->setAffiliateId('0ca3304d.a811038d.0ca3304e.80024f1e');
+        $res = $client->execute('IchibaItemSearch', array(
+            'keyword' => $msg['content']['text']
+            'hists' => 3,
+            'carrier' => 2
+        ));
+        if ($res->isOk()) {
+            error_log(__FILE__.":".__LINE__.":".print_r($res['hits'],true));
+        } else {
+            error_log(__FILE__.":".__LINE__.":".$res->getMessage());
+            continue;
+        }
+        $resContent['text'] = print_r($res['hits'],true);
 
         $requestOptions = [
             'body' => json_encode([
@@ -36,8 +43,8 @@ $app->post('/', function (Request $request, Response $response) {
             ],
             'proxy' => [
                 'https' => getenv('FIXIE_URL'),
-            ]
-        ];
+                ]
+            ];
 
         try {
             $client->request('post', 'https://trialbot-api.line.me/v1/events', $requestOptions);
@@ -50,9 +57,10 @@ $app->post('/', function (Request $request, Response $response) {
 });
 $app->get('/', function (Request $request, Response $response) {
     $response->getBody()->write(getenv('FIXIE_URL')."\n".
-                getenv('LINE_CHANNEL_ID')."\n".
-                getenv('LINE_CHANNEL_SECRET')."\n".
-                getenv('LINE_CHANNEL_MID'));
+        getenv('LINE_CHANNEL_ID')."\n".
+        getenv('LINE_CHANNEL_SECRET')."\n".
+        getenv('LINE_CHANNEL_MID'));
     return $response;
 });
 $app->run();
+
