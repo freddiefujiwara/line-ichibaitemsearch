@@ -10,6 +10,7 @@ $app->post('/callback', function (Request $request, Response $response) {
 
     $body = json_decode($request->getContent(), true);
 
+    foreach ($body['result'] as $msg) {
         $resContent = $msg['content'];
         $resContent['text'] = 'hello';
 
@@ -28,7 +29,7 @@ $app->post('/callback', function (Request $request, Response $response) {
             ],
             'proxy' => [
                 'https' => getenv('FIXIE_URL'),
-            ],
+            ]
         ];
 
         try {
